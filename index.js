@@ -7,9 +7,21 @@ function init() {
       return response.json()
     })
     .then(function (breweries) {
-      for (const brewery of breweries) {
-        breweryState(brewery)
-      }
+      const filterEl = document.querySelector("#filter-by-type")
+      filterEl.addEventListener("change", () => {
+        if (filterEl.value === "micro") {
+          render()
+          microFilter(breweries)
+        }
+        if (filterEl.value === "regional") {
+          render()
+          regionalFilter(breweries)
+        }
+        if (filterEl.value === "brewpub") {
+          render()
+          brewpublFilter(breweries)
+        }
+      })
     })
 }
 init()
@@ -29,16 +41,12 @@ function breweryState(brewery) {
     link: brewery.website_url,
   }
   listOfBreweries.push(state)
-  for (const brewery of listOfBreweries) {
-    renderBrewery(brewery)
-  }
+  renderBrewery(state)
 }
 
 /*****Top Level Render ******/
 function render() {
   clear()
-
-  breweryState()
 }
 
 function clear() {
@@ -81,45 +89,26 @@ function renderBrewery(brewery) {
 }
 
 /*****FILTER *****/
-const filterEl = document.querySelector("#filter-by-type")
-filterEl.addEventListener("change", () => {
-  if (filterEl.value === "micro") {
-    microFilter()
-  }
-  if (filterEl.value === "regional") {
-    regionalFilter()
-  }
-  if (filterEl.value === "brewpub") {
-    brewpubFilter()
-  }
-})
-
-function microFilter() {
-  const microArr = []
-  for (let i = 0; i < listOfBreweries.length; i++) {
-    if (listOfBreweries[i].type == "micro") {
-      microArr.push(listOfBreweries[i])
+function microFilter(brewery) {
+  for (const microB of brewery) {
+    if (microB.brewery_type == "micro") {
+      breweryState(microB)
     }
   }
-  render(microArr)
 }
 
-function regionalFilter() {
-  const regionalArr = []
-  for (let i = 0; i < listOfBreweries.length; i++) {
-    if (listOfBreweries[i].type == "large") {
-      regionalArr.push(listOfBreweries[i])
+function regionalFilter(brewery) {
+  for (const microB of brewery) {
+    if (microB.brewery_type == "large") {
+      breweryState(microB)
     }
   }
-  render(regionalArr)
 }
 
-function brewpubFilter() {
-  const brewpubArr = []
-  for (let i = 0; i < listOfBreweries.length; i++) {
-    if (listOfBreweries[i].type == "brewpub") {
-      brewpubArr.push(listOfBreweries[i])
+function brewpublFilter(brewery) {
+  for (const microB of brewery) {
+    if (microB.brewery_type == "brewpub") {
+      breweryState(microB)
     }
   }
-  render(brewpubArr)
 }
