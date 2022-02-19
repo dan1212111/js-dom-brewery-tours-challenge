@@ -21,7 +21,12 @@ function init() {
           render()
           brewpublFilter(breweries)
         }
+        if (filterEl.value === "") {
+          render()
+          filterAll(breweries)
+        }
       })
+      filterAll(breweries)
     })
 }
 init()
@@ -42,6 +47,20 @@ function breweryState(brewery) {
   }
   listOfBreweries.push(state)
   renderBrewery(state)
+  const searchEl = document.querySelector("#search-breweries")
+
+  searchEl.addEventListener("keyup", () => {
+    let searchF = searchEl.value
+    for (let i = 0; i < listOfBreweries.length; i++) {
+      if (listOfBreweries[i].name.indexOf(searchF) == -1) {
+        listOfBreweries.splice(i, 1)
+        render()
+        for (let i = 0; i < listOfBreweries.length; i++) {
+          renderBrewery(listOfBreweries[i])
+        }
+      }
+    }
+  })
 }
 
 /*****Top Level Render ******/
@@ -108,6 +127,18 @@ function regionalFilter(brewery) {
 function brewpublFilter(brewery) {
   for (const microB of brewery) {
     if (microB.brewery_type == "brewpub") {
+      breweryState(microB)
+    }
+  }
+}
+
+function filterAll(brewery) {
+  for (const microB of brewery) {
+    if (
+      microB.brewery_type == "brewpub" ||
+      microB.brewery_type == "large" ||
+      microB.brewery_type == "micro"
+    ) {
       breweryState(microB)
     }
   }
