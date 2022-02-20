@@ -125,7 +125,7 @@ function searchByState() {
 function findState(brewery) {
   render()
   for (const brew of listOfBreweries) {
-      console.log(brew)
+    console.log(brew)
     if (brew.state.toLowerCase() == brewery) {
       renderBrewery(brew)
     }
@@ -199,6 +199,7 @@ function renderCitiesList(city) {
   input.addEventListener("change", function (event) {
     event.preventDefault()
     filterByCity(city, this.checked)
+    checkAll()
   })
 }
 
@@ -215,6 +216,15 @@ function filterByCity(city, value) {
   for (const brewery of listOfBreweries) {
     if (brewery.value === true) {
       renderBrewery(brewery)
+    }
+  }
+}
+
+function checkAll() {
+  const result = listOfBreweries.find((item) => item.value === true)
+  if (result === undefined) {
+    for (let i = 0; i < listOfBreweries.length; i++) {
+      renderBrewery(listOfBreweries[i])
     }
   }
 }
