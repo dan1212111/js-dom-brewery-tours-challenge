@@ -29,6 +29,14 @@ function init() {
       filterAll(breweries)
       findCities(breweries)
       searchByState()
+      const clearEl = document.querySelector("#clear-all-btn")
+      clearEl.addEventListener("click", () => {
+        setCitiesFalse()
+        clearCitiesFilter()
+        findCities(breweries)
+        render()
+        checkAll()
+      })
     })
 }
 init()
@@ -125,7 +133,7 @@ function searchByState() {
 function findState(brewery) {
   render()
   for (const brew of listOfBreweries) {
-    console.log(brew)
+    console.log(brew.state)
     if (brew.state.toLowerCase() == brewery) {
       renderBrewery(brew)
     }
@@ -228,3 +236,16 @@ function checkAll() {
     }
   }
 }
+
+function clearCitiesFilter() {
+  const cityFilterEl = document.querySelector("#filter-by-city-form")
+  cityFilterEl.innerHTML = ""
+}
+
+function setCitiesFalse() {
+  for (const brew of listOfBreweries) {
+    brew.value = false
+  }
+}
+
+// ADD THE CLEAR ALL FUNCTIONALITY
