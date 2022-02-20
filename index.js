@@ -27,6 +27,7 @@ function init() {
         }
       })
       filterAll(breweries)
+      findCities(breweries)
     })
 }
 init()
@@ -52,7 +53,10 @@ function breweryState(brewery) {
   searchEl.addEventListener("keyup", () => {
     let searchF = searchEl.value
     for (let i = 0; i < listOfBreweries.length; i++) {
-      if (listOfBreweries[i].name.indexOf(searchF) == -1) {
+      if (
+        listOfBreweries[i].name.toLowerCase().indexOf(searchF.toLowerCase()) ==
+        -1
+      ) {
         listOfBreweries.splice(i, 1)
         render()
         for (let i = 0; i < listOfBreweries.length; i++) {
@@ -140,6 +144,56 @@ function filterAll(brewery) {
       microB.brewery_type == "micro"
     ) {
       breweryState(microB)
+    }
+  }
+}
+
+/*** CITY FILTER  ***/
+function findCities(brew) {
+  const brewArr = []
+  const brewCities = []
+  brewArr.push(brew)
+  for (const brewCity of brew) {
+    brewCities.push(brewCity.city)
+  }
+  const uniqueCities = [...new Set(brewCities)]
+  for (let i = 0; i < uniqueCities.length; i++) {
+    renderCitiesList(uniqueCities[i])
+  }
+}
+
+function renderCitiesList(city) {
+  const cityFilterEl = document.querySelector("#filter-by-city-form")
+  const input = document.createElement("input")
+  input.setAttribute("type", "checkbox")
+  input.setAttribute("name", city)
+  input.setAttribute("value", city)
+  const label = document.createElement("label")
+  label.setAttribute("for", city)
+  const labelTxt = document.createTextNode(city)
+  label.append(labelTxt)
+
+  cityFilterEl.append(input, label)
+
+  input.addEventListener("change", function (event) {
+    event.preventDefault()
+    filterByCity(city, this.checked)
+  })
+}
+
+function filterByCity(city, value) {
+  render()
+  for (const brew of listOfBreweries) {
+    if (value === true && brew.city == city) {
+      brew.value = true
+    }
+    if (value === false && brew.city == city) {
+      brew.value = false
+    }
+  }
+  for (const brewery of listOfBreweries) {
+    if (brewery.value === true) {
+      renderBrewery(brewery)
     }
   }
 }
