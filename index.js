@@ -28,6 +28,7 @@ function init() {
       })
       filterAll(breweries)
       findCities(breweries)
+      searchByState()
     })
 }
 init()
@@ -109,6 +110,26 @@ function renderBrewery(brewery) {
 
   li.append(h2, div, addressSection, phoneSection, linkSection)
   breweriesList.append(li)
+}
+
+/****SEARCH BY STATE ****/
+function searchByState() {
+  const stateEl = document.querySelector("#select-state-form")
+  const submittedEl = document.querySelector("#select-state")
+  stateEl.addEventListener("submit", function (event) {
+    event.preventDefault()
+    findState(submittedEl.value.toLowerCase())
+  })
+}
+
+function findState(brewery) {
+  render()
+  for (const brew of listOfBreweries) {
+      console.log(brew)
+    if (brew.state.toLowerCase() == brewery) {
+      renderBrewery(brew)
+    }
+  }
 }
 
 /*****FILTER *****/
