@@ -26,6 +26,7 @@ function init() {
           filterAll(breweries)
         }
       })
+      listOfBreweriesUniq(breweries)
       filterAll(breweries)
       findCities(breweries)
       searchByState()
@@ -59,18 +60,16 @@ function breweryState(brewery) {
   renderBrewery(state)
   const searchEl = document.querySelector("#search-breweries")
 
-  searchEl.addEventListener("keyup", () => {
+  searchEl.addEventListener("keydown", () => {
     let searchF = searchEl.value
+    render()
     for (let i = 0; i < listOfBreweries.length; i++) {
       if (
-        listOfBreweries[i].name.toLowerCase().indexOf(searchF.toLowerCase()) ==
-        -1
+        listOfBreweries[i].name
+          .toLowerCase()
+          .includes(searchEl.value.toLowerCase())
       ) {
-        listOfBreweries.splice(i, 1)
-        render()
-        for (let i = 0; i < listOfBreweries.length; i++) {
-          renderBrewery(listOfBreweries[i])
-        }
+        renderBrewery(listOfBreweries[i])
       }
     }
   })
@@ -80,7 +79,6 @@ function breweryState(brewery) {
 function render() {
   clear()
 }
-
 function clear() {
   breweriesList.innerHTML = ""
 }
@@ -91,7 +89,7 @@ function renderBrewery(brewery) {
   h2.innerText = brewery.name
   const div = document.createElement("div")
   div.classList = "type"
-  div.innerText = brewery.type
+  div.innerText = brewery.type 
   const addressSection = document.createElement("section")
   addressSection.classList = "address"
   const h3 = document.createElement("h3")
@@ -119,6 +117,8 @@ function renderBrewery(brewery) {
   li.append(h2, div, addressSection, phoneSection, linkSection)
   breweriesList.append(li)
 }
+
+/**** PAGINATION ****/
 
 /****SEARCH BY STATE ****/
 function searchByState() {
@@ -211,9 +211,17 @@ function renderCitiesList(city) {
   })
 }
 
+const listOfBreweriesUniqs = []
+function listOfBreweriesUniq (brew) {
+  for(const b of brew) {
+    listOfBreweriesUniqs.push(b) 
+  }
+}
+
 function filterByCity(city, value) {
   render()
-  for (const brew of listOfBreweries) {
+  console.log(listOfBreweriesUniqs)
+  for (const brew of listOfBreweriesUniqs) {
     if (value === true && brew.city == city) {
       brew.value = true
     }
@@ -221,18 +229,18 @@ function filterByCity(city, value) {
       brew.value = false
     }
   }
-  for (const brewery of listOfBreweries) {
+  for (const brewery of listOfBreweriesUniqs) {
     if (brewery.value === true) {
-      renderBrewery(brewery)
+      breweryState(brewery)
     }
   }
 }
 
 function checkAll() {
-  const result = listOfBreweries.find((item) => item.value === true)
+  const result = listOfBreweriesUniqs.find((item) => item.value === true)
   if (result === undefined) {
-    for (let i = 0; i < listOfBreweries.length; i++) {
-      renderBrewery(listOfBreweries[i])
+    for (let i = 0; i < listOfBreweriesUniqs.length; i++) {
+      breweryState(listOfBreweriesUniqs[i])
     }
   }
 }
@@ -243,9 +251,10 @@ function clearCitiesFilter() {
 }
 
 function setCitiesFalse() {
-  for (const brew of listOfBreweries) {
+  for (const brew of listOfBreweriesUniqs) {
     brew.value = false
   }
 }
 
-// ADD THE CLEAR ALL FUNCTIONALITY
+
+// extension 3
